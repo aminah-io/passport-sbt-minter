@@ -1,0 +1,1 @@
+# passport-sbt-minter
