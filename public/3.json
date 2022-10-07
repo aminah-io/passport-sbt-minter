@@ -1,0 +1,8 @@
+{
+	"name": "SnapshotProposalsProvider",
+	"description": "User has voted on more than 2 Snapshot DAO proposals.",
+	"image": "https://ipfs.io/ipfs/QmcdUi51YPhSmGjPnKTFoiQbHjAQqKoRXm55JQ3vXfPyor?filename=3.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

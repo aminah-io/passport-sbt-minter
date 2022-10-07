@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
   // using SafeMath for uint256;
@@ -13,8 +14,10 @@ contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
   uint256 public constant GITHUB = 2;
   uint256 public constant SNAPSHOT_PROPOSALS_PROVIDER = 3;
   uint256 public constant SNAPSHOT_VOTES_PROVIDER = 4;
-
-  constructor() ERC1155("assets_images_url") {
+https://ipfs.io/ipfs/QmUHinEtXqh7DDPSnZdsa9CDttz5CuxSkP5SypfJqP4d7p?filename=0
+https://ipfs.io/ipfs/QmfTRsvfjZnE5vPwTPqq8eESbT82vFWHt6cqzDWx5jQTYR?filename=1
+https://ipfs.io/ipfs/QmaVHkD9DnycY1LKhRp9rTMw9dvrPicMPTg5Udw46Gdr86?filename=2
+  constructor() ERC1155("https://ipfs.io/ipfs/QmYhubfSts4ZcnuuKPAMf6CYbM1yWUJuXayDbKLp9QR5TM") {
     _mint(msg.sender, TWITTER, 1, "Twitter");
     _mint(msg.sender, ENS, 1, "Ens");
     _mint(msg.sender, GITHUB, 1, "Github");

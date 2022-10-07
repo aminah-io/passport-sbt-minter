@@ -11,15 +11,15 @@ import { Button, Stack } from "@chakra-ui/react";
 
 // --- Passport SDK
 import { PassportReader } from "@gitcoinco/passport-sdk-reader";
-// import { PassportVerifier } from "@gitcoinco/passport-sdk-verifier";
+
+// -- Types
 import { Passport, PROVIDER_ID, Stamp } from "@gitcoinco/passport-sdk-types";
+import { TOKEN_TYPES } from "../types/types";
 
 import contractInterface from "../contract-abi.json";
 
 
 const reader = new PassportReader("https://ceramic.passport-iam.gitcoin.co", "1");
-
-// const verifier = new PassportVerifier();
 
 const contractConfig = {
   addressOrName: "",
