@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "deploy": "npx hardhat run --network localhost scripts/deploy.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

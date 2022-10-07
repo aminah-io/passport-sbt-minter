@@ -2,7 +2,6 @@
   "name": "app",
   "version": "1.0.0",
   "description": "",
-  "main": "app/main.tsx",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -26,7 +25,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.4.0",
-    "wagmi": "^0.5.5"
+    "wagmi": "^0.6.8"
   },
   "devDependencies": {
     "@types/chai": "^4.3.3",
