@@ -5,6 +5,12 @@ import { ethers } from "hardhat";
 
 const tokenType = 0;
 const stampHash = "abcabcabcabc";
+const tokenTypes = [0, 1];
+const stampHashes = ["abcabcabcabc", "xyzxyzxyzxyz"];
+const amounts = [1, 1];
+const duplicateTokenTypes = [0, 1, 1];
+const duplicateStampHashes = ["abcabcabcabc", "xyzxyzxyzxyz", "xyzxyzxyzxyz"];
+const duplicateAmounts = [1, 1, 1];
 
 describe("PassportSBT", function () {
   // We define a fixture to reuse the same setup in every test.
@@ -15,7 +21,7 @@ describe("PassportSBT", function () {
     // Contracts are deployed using the first signer/account by default
     const [owner, otherAccount] = await ethers.getSigners();
 
-    const PassportSbt = await ethers.getContractFactory("PassportSBT");
+    const PassportSbt = await ethers.getContractFactory("PassportSBToken");
     const passportSbtSM = await PassportSbt.deploy();
 
     return { passportSbtSM, owner, otherAccount };
@@ -28,6 +34,20 @@ describe("PassportSBT", function () {
       await passportSbtSM.mint(tokenType, stampHash);
 
       await expect(passportSbtSM.mint(tokenType, stampHash)).to.be.revertedWith("Stamp is already minted!");
+    });
+
+    it("Should mint multiple stamps at once if none of those stamps have been minted for the given address", async function () {
+      const { passportSbtSM } = await loadFixture(PassportSbtMinter);
+
+      await passportSbtSM.mintBatch(tokenTypes, stampHashes, amounts);
+
+      await expect(passportSbtSM.mintBatch(duplicateTokenTypes, duplicateStampHashes, duplicateAmounts)).to.be.revertedWith("Stamp is already minted!");
+    });
+
+    it("should burn all tokens with the ids sent in from the UI", async function() {
+      const { passportSbtSM } = await loadFixture(PassportSbtMinter);
+
+      await passportSbtSM.burnBatch("", tokenTypes, amounts);
     });
   });
 });

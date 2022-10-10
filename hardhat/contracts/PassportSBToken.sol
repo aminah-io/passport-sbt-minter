@@ -7,22 +7,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
 contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
-  // using SafeMath for uint256;
-
+  address public minter;
   uint256 public constant TWITTER = 0;
   uint256 public constant ENS = 1;
   uint256 public constant GITHUB = 2;
   uint256 public constant SNAPSHOT_PROPOSALS_PROVIDER = 3;
   uint256 public constant SNAPSHOT_VOTES_PROVIDER = 4;
-https://ipfs.io/ipfs/QmUHinEtXqh7DDPSnZdsa9CDttz5CuxSkP5SypfJqP4d7p?filename=0
-https://ipfs.io/ipfs/QmfTRsvfjZnE5vPwTPqq8eESbT82vFWHt6cqzDWx5jQTYR?filename=1
-https://ipfs.io/ipfs/QmaVHkD9DnycY1LKhRp9rTMw9dvrPicMPTg5Udw46Gdr86?filename=2
-  constructor() ERC1155("https://ipfs.io/ipfs/QmYhubfSts4ZcnuuKPAMf6CYbM1yWUJuXayDbKLp9QR5TM") {
-    _mint(msg.sender, TWITTER, 1, "Twitter");
-    _mint(msg.sender, ENS, 1, "Ens");
-    _mint(msg.sender, GITHUB, 1, "Github");
-    _mint(msg.sender, SNAPSHOT_PROPOSALS_PROVIDER, 1, "SnapshotProposalsProvider");
-    _mint(msg.sender, SNAPSHOT_VOTES_PROVIDER, 1, "SnapshotVotesProvider");
+
+  constructor() ERC1155("https://passport-sbt-minter.vercel.app/{tokenType}.json") {
+    minter = msg.sender;
   }
 
   mapping(string => address) stampHashes;
@@ -38,28 +31,33 @@ https://ipfs.io/ipfs/QmaVHkD9DnycY1LKhRp9rTMw9dvrPicMPTg5Udw46Gdr86?filename=2
   }
 
   // BATCH TOKEN MINTING
-  // Loop through the array received from the frontend
-  // containing the stamps, and use _mint to mint each one
-  // - How much gas will this cost?
-  // - Will this actually work?
-  // - What does the stampHash consist of (am I creating this?)
-  // - How will the batchMint function receive the stamps array 
-  // from the frontend, e.g. what do I need to configure in the 
-  // wagmi hook to be able to send the array back?
 
-  // function batchMint(
-  //   uint256 tokenTypes[],
-  //   string memory stampHash
-  // ) public {
-  // }
+  function mintBatch(
+    uint256[] memory tokenIds,
+    string[] memory stampHash,
+    uint256[] memory tokenAmounts
+  ) public {
+    for (uint256 i = 0; i < tokenIds.length; ++i) {
+      require(stampHashes[stampHash[i]] == address(0), "Stamp is already minted!");
+
+      stampHashes[stampHash[i]] = msg.sender;
+    }
+    _mintBatch(msg.sender, tokenIds, tokenAmounts, "");
+  }
 
   // BURN TOKEN
 
-  function burn(address account, uint256 tokenType, uint256 amount) public override onlyOwner {
-    super.burn(account, tokenType, amount);
-  }
+  // function burn(address account, uint256 tokenType, uint256 amount) public override onlyOwner {
+  //   super.burn(account, tokenType, amount);
+  // }
 
   // BATCH TOKEN BURNING
+  function burnBatch(
+    uint256[] memory tokenIds,
+    uint256[] memory tokenAmounts
+  ) external {
+    _burnBatch(msg.sender, tokenIds, tokenAmounts);
+  }
 
   // @dev Internal hook to disable all transfers
   function _beforeTokenTransfer(

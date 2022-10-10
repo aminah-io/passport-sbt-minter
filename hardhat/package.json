@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "npx hardhat run --network localhost scripts/deploy.ts"
+    "deploy": "npx hardhat run --network goerli scripts/deploy.ts"
   },
   "keywords": [],
   "author": "",
