@@ -236,3 +236,8 @@ export type TokenTypes = TokenObject[];
 export type TokenId = number;
 
 export type TokenIds = TokenId[];
+
+export type TokenIdHashList = {
+  tokenId?: number;
+  stampHash?: string;
+}

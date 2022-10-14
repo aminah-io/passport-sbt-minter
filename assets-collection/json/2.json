@@ -1,0 +1,8 @@
+{
+	"name": "Github",
+	"description": "I am an owner of a GitHub account.",
+	"image": "https://passport-sbt-minter.vercel.app/assets-collection/2.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

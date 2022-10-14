@@ -1,8 +1,0 @@
-{
-	"name": "Twitter",
-	"description": "User has a Twitter account.",
-	"image": "https://ipfs.io/ipfs/QmUVZw9t4uFvdi95ckYxoso6v5XzzPmrxb74QwNTdDGsc3?filename=0.svg",
-	"properties": {
-		"mintable": "true"
-	}
-}

@@ -1,8 +1,0 @@
-{
-	"name": "Ens",
-	"description": "User has an ENS name",
-	"image": "https://ipfs.io/ipfs/QmeQimziodxUV6ZTkhJ3e5XZec4eiuKMSNJmk3Z8JnrtYo?filename=1.svg",
-	"properties": {
-		"mintable": "true"
-	}
-}

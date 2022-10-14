@@ -1,31 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, LegacyRef } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { 
   useAccount, 
   usePrepareContractWrite,
-  useContractRead,
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import { Button, Stack, List, ListItem, useBoolean } from "@chakra-ui/react";
+
+// -- Components
+import { 
+  Button, 
+  Stack, 
+  List, 
+  ListItem, 
+  useBoolean, 
+  Drawer, 
+  DrawerBody, 
+  DrawerFooter, 
+  DrawerHeader, 
+  DrawerOverlay, 
+  DrawerContent, 
+  DrawerCloseButton,
+  useDisclosure, 
+} from "@chakra-ui/react";
+import StampSbtList from "./components/StampSbtList";
 
 // --- Passport SDK
 import { PassportReader } from "@gitcoinco/passport-sdk-reader";
 
 // -- Types
-import { TokenTypes, TokenIds, PROVIDER_ID, Stamp, Passport } from "../types/types";
+import { TokenIds, TokenId, PROVIDER_ID, Stamp, Passport, TokenIdHashList } from "../types/types";
 
 // -- Helpers
 import { createHash } from "../utils/helpers";
-import { TOKEN_TYPES } from "../constants/tokenTypes";
-
 import contractInterface from "../contract-abi.json";
 
+// -- Constants
+import { TOKEN_TYPES } from "../constants/tokenTypes";
+
+import { Network, Alchemy, OwnedNftsResponse } from "alchemy-sdk";
+
+const settings = {
+  apiKey: import.meta.env.ALCHEMY_API_KEY,
+  network: Network.ETH_GOERLI,
+};
 
 const reader = new PassportReader("https://ceramic.passport-iam.gitcoin.co", "1");
 
 const contractConfig = {
-  addressOrName: "0xe973392bCa55A63a15f9590fbFfd1ADE923d8CB0" || "",
+  addressOrName: `${import.meta.env.CONTRACT_ADDRESS}`,
   contractInterface: contractInterface,
 }
 
@@ -36,10 +59,16 @@ function App() {
   const [stamps, setStamps] = useState<Stamp[]>();
   const [providerList, setProviderList] = useState<PROVIDER_ID[]>();
   const [tokenIds, setTokenIds] = useState<TokenIds>();
-  const [stampHash, setStampHashes] = useState<String[]>();
+  const [stampHash, setStampHashes] = useState<string[]>();
+  const [burnStampHash, setBurnStampHash] = useState<string>();
   const [tokenAmounts, setTokenAmounts] = useState<Number[]>();
+  const [usersTokenList, setUsersTokenList] = useState<OwnedNftsResponse>();
+  const [tokenIdHashesList, setTokenIdHashesList] = useState<TokenIdHashList[]>([]);
+  const [tokenId, setTokenId] = useState<TokenId>();
   const [showStamps, setShowStamps] = useBoolean();
-
+  const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
+  const btnRef: React.MutableRefObject<undefined> = React.useRef();
+  
   // Load the passport from passport reader and set passport to state  
   useEffect(() => {
     async function getData(): Promise<void> {
@@ -49,8 +78,19 @@ function App() {
     }
     getData();
   }, [address]);
+
+  const alchemy = new Alchemy(settings);
   
-  // Set the stamps to state
+  // ---- Set the SBTs the address owns
+  useEffect(() => {
+    async function getSbtsForAddress(): Promise<void> {
+      const owner = await alchemy.nft.getNftsForOwner(address!);
+      setUsersTokenList(owner);
+    }
+    getSbtsForAddress();
+  }, [address]);
+
+  // ---- Set the stamps to state
   useEffect(() => {
     if (passport) {
       setStamps(passport?.stamps?.map(stamp => stamp));
@@ -58,14 +98,14 @@ function App() {
     }
   }, [passport]);
   
-  // Set the providerId list to state
+  // ---- Set the providerId list to state
   useEffect(() => {
     if (stamps) {
       setProviderList(stamps?.map((stamp) => stamp.provider));
     }
   }, [stamps]);
 
-  // Set the token ids to state
+  // ---- Set the token ids to state
   useEffect(() => {
     if (providerList) {
       setTokenIds(TOKEN_TYPES.filter(tokenType =>
@@ -73,21 +113,38 @@ function App() {
     }
   }, [providerList]);
   
-  // Create and set the stamp hashes to state
+  // ---- Create and set the stamp hashes to state
   useEffect(() => {
     if (providerList) {
       setStampHashes(TOKEN_TYPES.filter(tokenType => providerList.includes(tokenType.providerId)).map(tokenType => createHash(address!, tokenType.providerId)));
     }
   }, [providerList]);
   
-  // Create a new array and fill it with the amount of token ids in 
+  // ---- Create a new array and fill it with the amount of token ids in 
   useEffect(() => {
     if (tokenIds) {
       setTokenAmounts(new Array(tokenIds?.length).fill(1));
     }
   }, [tokenIds]);
+  
+  useEffect(() => {
+    const tokenIdsHashes = [...tokenIdHashesList];
+    if (tokenIds && stampHash) {
+      for (let i = 0; i < tokenIds?.length; i++) {
+        if (tokenIdHashesList[i]?.stampHash !== stampHash[i]) {
+          tokenIdsHashes.push({
+            tokenId: tokenIds[i],
+            stampHash: stampHash[i]
+          });
+        }
+      }
+    }
+    setTokenIdHashesList(tokenIdsHashes);
+  }, [tokenIds, stampHash]);
+  
+  console.info("Hash token list", tokenIdHashesList)
 
-  const { config: contractWriteConfig } = usePrepareContractWrite({
+  const { config: mintContractWriteConfig } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "mintBatch",
     args: [tokenIds, stampHash, tokenAmounts],
@@ -99,23 +156,19 @@ function App() {
     isLoading: isMintLoading,
     isSuccess: isMintStarted,
     error: mintError,
-  } = useContractWrite(contractWriteConfig);
+    isError: isMintError
+  } = useContractWrite(mintContractWriteConfig);
 
   const {
-    data: txData,
-    isSuccess: txSuccess,
-    error: txError,
+    data: mintTxData,
+    isSuccess: mintTxSuccess,
+    error: mintTxError,
+    isError: isMintTxError
   } = useWaitForTransaction({
     hash: mintData?.hash,
   });
 
-  // const { data: contractData, isFetching, isSuccess: isFetchingSuccess } = useContractRead({
-  //     ...contractConfig,
-  //     functionName: "mintBatch",
-  //     watch: true,
-  // })
-
-  const isMinted = txSuccess;
+  const isMinted = mintTxSuccess;
 
   const mintButton = 
     <Stack align="center">
@@ -129,24 +182,10 @@ function App() {
       >
         {isMintLoading && "Waiting for approval"}
         {isMintStarted && "Minting..."}
-        {!isMintLoading && !isMintStarted || isMinted && "Mint Your Passport SBT"}
+        {!isMintStarted && !isMintLoading && "Mint Your Passport SBTs"}
+        {isMintTxError && "ERROR!"}
       </Button>
     </Stack>
-
-  // const showSbtsButton = 
-  //   <Stack align="center">
-  //     <Button 
-  //       className="flex justify-center m-auto mt-10 p-4 rounded-xl font-bold"
-  //       colorScheme="purple"
-  //       variant="solid"
-  //       size="lg"
-  //       disabled={isLoading}
-  //       // onClick={() => }
-  //     >
-  //       {isFetching && "Reading contract..."}
-  //       {isFetchingSuccess}
-  //     </Button>
-  //   </Stack>
 
   const showPassportStamps = () => {
     const stampList = stamps?.map((stamp, i) => {
@@ -159,18 +198,17 @@ function App() {
     return stampList;
   }
 
+  console.log("** tokenId", tokenId)
+
   return (
     <main className="bg-zinc-900 flex justify-center items-center text-white w-full p-10 max-h-full min-h-screen">
       <div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl pb-10 font-bold text-center">
         🛂 Passport SBT Minting
         </h1>
-        <div className="flex justify-center">
-          <ConnectButton showBalance={false} />
-        </div>
         {isConnected
           ? <div>
-              <h2 className="text-center text-2xl font-semibold mt-6 mb-6 break-all">Welcome, {address}!</h2>
+              <h2 className="text-center text-2xl font-semibold mt-6 mb-6 break-all">Welcome, <span className="text-teal-200">{address}</span>!</h2>
               <div>
                 {mintButton}
               </div>
@@ -178,6 +216,9 @@ function App() {
             </div>
           : <div>
               <p className="text-2xl font-semibold mt-6 mb-6 text-center">Please connect your wallet</p>
+              <div className="flex justify-center">
+                <ConnectButton showBalance={false} />
+              </div>
             </div>
         }
         {mintError && (
@@ -185,24 +226,36 @@ function App() {
             Error: {mintError?.message}
           </p>
         )}
-        {txError && (
+        {mintTxError && (
           <p className="text-xl font-semibold text-red-300 text-center m-3">
-            Error: {txError?.message}
+            Error: {mintTxError?.message}
           </p>
         )}
-        <div className="flex justify-center">
+        <div className="flex flex-row justify-center">
           {isConnected && (
+            <>
               <Button
-                  className="flex justify-center mt-9"
-                  onClick={setShowStamps.toggle}
-                  size="lg"
-                  colorScheme="blue"
-                  disabled={isLoading}
-                >
-                  {!showStamps && "Show Your Stamps"}
-                  {showStamps && "Hide Your Stamps"}
-                </Button>
-              )}
+                className="flex justify-center mt-9 mr-1"
+                onClick={setShowStamps.toggle}
+                size="lg"
+                colorScheme="teal"
+                disabled={isLoading}
+              >
+                {!showStamps && "Show Your Stamps"}
+                {showStamps && "Hide Your Stamps"}
+              </Button>
+              <Button
+                className="flex justify-center mt-9 ml-1"
+                ref={btnRef.current}
+                onClick={onDrawerOpen}
+                size="lg"
+                colorScheme="cyan"
+                disabled={isLoading}
+              >
+                Show SBT Passport
+              </Button>
+            </>
+          )}
         </div>
         <div>
           {
@@ -217,6 +270,29 @@ function App() {
           }
         </div>
       </div>
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={onDrawerClose}
+        placement="right"
+        size="xl"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            Passport Soulbound Tokens
+          </DrawerHeader>
+          <DrawerBody>
+            <StampSbtList
+              usersTokenList={usersTokenList}
+              setTokenId={setTokenId}
+            />
+          </DrawerBody>
+          <DrawerFooter>
+            Passport
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </main>
   );
 }

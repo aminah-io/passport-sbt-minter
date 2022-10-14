@@ -39,8 +39,8 @@
       ]
     },
     "/Users/aminahjamil/passport-sbt-minter/hardhat/contracts/PassportSBToken.sol": {
-      "lastModificationDate": 1665406792937,
-      "contentHash": "9910c200ac914e5e83fabdcaadc71278",
+      "lastModificationDate": 1665732079280,
+      "contentHash": "03268616c73e6c6b0200f220d518dc69",
       "sourceName": "contracts/PassportSBToken.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -68,7 +68,9 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
         "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol",
+        "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Strings.sol",
         "hardhat/console.sol"
       ],
       "versionPragmas": [
@@ -480,6 +482,41 @@
       ],
       "artifacts": [
         "console"
+      ]
+    },
+    "/Users/aminahjamil/passport-sbt-minter/hardhat/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+      "lastModificationDate": 1665132941666,
+      "contentHash": "cf46906c4035f51639a22265066a9e78",
+      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Strings"
       ]
     }
   }

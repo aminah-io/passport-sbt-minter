@@ -1,0 +1,8 @@
+{
+	"name": "Snapshot Votes Provider",
+	"description": "I have created a Snapshot proposal for a DAO that has been voted on.",
+	"image": "https://passport-sbt-minter.vercel.app/assets-collection/4.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

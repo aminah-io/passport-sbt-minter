@@ -1,8 +1,0 @@
-{
-	"name": "Github",
-	"description": "User has a GitHub account.",
-	"image": "https://ipfs.io/ipfs/QmSnEken14czkwxoc8rAybCC8d2Zdj8pes5wwgezoAh7xp?filename=2.svg",
-	"properties": {
-		"mintable": "true"
-	}
-}

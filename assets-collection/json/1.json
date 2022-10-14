@@ -1,0 +1,8 @@
+{
+	"name": "Ens",
+	"description": "I am an owner of an ENS name.",
+	"image": "https://passport-sbt-minter.vercel.app/assets-collection/1.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

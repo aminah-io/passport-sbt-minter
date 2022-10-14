@@ -1,8 +1,0 @@
-{
-	"name": "SnapshotVotesProvider",
-	"description": "User has created a proposal that has been voted on.",
-	"image": "https://ipfs.io/ipfs/QmQLuRgwGJY2Rfi64NaEWPvFUrhn68RTtA1Emzkp1pxbng?filename=4.svg",
-	"properties": {
-		"mintable": "true"
-	}
-}

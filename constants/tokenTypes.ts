@@ -25,4 +25,8 @@ export const TOKEN_TYPES: TokenTypes = [
     providerId: "Linkedin",
     tokenId: 5,
   },
+  {
+    providerId: "Discord",
+    tokenId: 6,
+  },
 ];
