@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "npx hardhat run --network goerli scripts/deploy.ts"
+    "deploy": "npx hardhat run --network hardhat scripts/deploy.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@nomicfoundation/solidity-analyzer-darwin-arm64": "^0.1.0",
     "@openzeppelin/contracts": "^4.7.3",
     "dotenv": "^16.0.3"
   }
