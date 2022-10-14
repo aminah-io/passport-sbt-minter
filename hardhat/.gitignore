@@ -17,6 +17,7 @@ dist-ssr
 typechain-types/
 cache/
 artifacts/
+artifacts/@openzeppelin/*
 
 # Editor directories and files
 .vscode/*

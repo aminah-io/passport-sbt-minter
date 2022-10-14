@@ -8,11 +8,27 @@ import { OwnedNftsResponse } from "alchemy-sdk";
 type StampSbtListProps = {
   usersTokenList?: OwnedNftsResponse;
   setTokenId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  isBurnLoading: boolean;
+  isBurnStarted: boolean;
+  burnError: Error | null;
+  isBurnError: boolean;
+  burnTxSuccess: boolean;
+  burnTxError: Error | null;
+  isBurnTxError: boolean;
+  burnToken: Function | undefined;
 }
 
 export default function StampSbtList({
   usersTokenList,
   setTokenId,
+  isBurnLoading,
+  isBurnStarted,
+  burnError,
+  isBurnError,
+  burnTxSuccess,
+  burnTxError,
+  isBurnTxError,
+  burnToken,
 }: StampSbtListProps): JSX.Element {
   const tokenList = usersTokenList?.ownedNfts.map((sbt, i) => {
     if (sbt.contract.address === `${import.meta.env.CONTRACT_ADDRESS}`.toLowerCase()) {
@@ -28,6 +44,14 @@ export default function StampSbtList({
               contractAddress={sbt.contract?.address}
               tokenId={sbt.tokenId}
               setTokenId={setTokenId}
+              isBurnLoading={isBurnLoading}
+              isBurnStarted={isBurnStarted}
+              burnError={burnError}
+              isBurnError={isBurnError}
+              burnTxSuccess={burnTxSuccess}
+              burnTxError={burnTxError}
+              isBurnTxError={isBurnTxError}
+              burnToken={burnToken}
             />
           </GridItem>
         </>

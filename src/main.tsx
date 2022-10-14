@@ -14,7 +14,6 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 import { ChakraProvider } from "@chakra-ui/react";
-import { InjectedConnector } from 'wagmi/connectors/injected';
 
 const { chains, provider } = configureChains(
   [
@@ -74,6 +73,14 @@ const { chains, provider } = configureChains(
           http: "https://rpc.ankr.com/arbitrum",
         };
       },
+    }),
+    publicProvider(),
+    jsonRpcProvider({
+      rpc: () => {
+        return {
+          http: "http://localhost:8545"
+        }
+      }
     }),
     publicProvider(),
   ]

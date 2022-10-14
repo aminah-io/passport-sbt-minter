@@ -9,6 +9,14 @@ type StampCardProps = {
   contractAddress?: string | undefined;
   tokenId: string;
   setTokenId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  isBurnLoading: boolean;
+  isBurnStarted: boolean;
+  burnError: Error | null;
+  isBurnError: boolean;
+  burnTxSuccess: boolean;
+  burnTxError: Error | null;
+  isBurnTxError: boolean;
+  burnToken: Function | undefined;
 }
 
 export default function StampCard({
@@ -19,6 +27,14 @@ export default function StampCard({
   contractAddress,
   tokenId,
   setTokenId,
+  isBurnLoading,
+  isBurnStarted,
+  burnError,
+  isBurnError,
+  burnTxSuccess,
+  burnTxError,
+  isBurnTxError,
+  burnToken,
 }: StampCardProps): JSX.Element {
   // SBT name
   // Description
@@ -43,6 +59,7 @@ export default function StampCard({
           value={tokenId}
           onClick={(e) => {
             setTokenId(parseInt(tokenId));
+            burnToken?.();
           }}
         >
           Burn SBT

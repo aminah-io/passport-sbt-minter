@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "@nomicfoundation/solidity-analyzer-darwin-arm64": "^0.1.0",
     "@openzeppelin/contracts": "^4.7.3",
     "dotenv": "^16.0.3"
   }

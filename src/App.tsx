@@ -5,7 +5,6 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-  useContractRead,
   useProvider,
 } from "wagmi";
 import {getSerializedSignedVC} from "./utils/sign";
@@ -34,6 +33,7 @@ import { PassportReader } from "@gitcoinco/passport-sdk-reader";
 
 // -- Types
 import { TokenIds, TokenId, PROVIDER_ID, Stamp, Passport, TokenIdHashList } from "../types/types";
+import { GetSerializedVCInputs } from "./utils/sign";
 
 // -- Helpers
 import { createHash } from "../utils/helpers";
@@ -46,27 +46,17 @@ import { TOKEN_TYPES } from "../constants/tokenTypes";
 import { Network, Alchemy, OwnedNftsResponse } from "alchemy-sdk";
 
 const settings = {
-  apiKey: import.meta.env.ALCHEMY_API_KEY,
+  apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
   network: Network.ETH_GOERLI,
 };
+
 
 const reader = new PassportReader("https://ceramic.passport-iam.gitcoin.co", "1");
 
 const contractConfig = {
-  addressOrName: `${import.meta.env.CONTRACT_ADDRESS}`,
+  addressOrName: `${import.meta.env.VITE_PASSPORT_SBT_CONTRACT_ADDRESS}`,
   contractInterface: contractInterface,
 }
-
-const verifierContractConfig = {
-  addressOrName: `${import.meta.env.VITE_VERIFIER_CONTRACT_ADDRESS}`,
-  contractInterface: verifierInterface,
-}
-
-type Proof = {
-  r: string;
-  s: string;
-  v: number;
-};
 
 function App() {
   const { address, isConnected } = useAccount();
@@ -87,9 +77,8 @@ function App() {
   const [proof, setProof] = useState({r:"", s:"", v:0});
   const [vcWithoutProof, setVcWithoutProof] = useState();
   const provider = useProvider();
+  const alchemy = new Alchemy(settings);
   
-  console.log("provider: ", provider);
-
   // Load the passport from passport reader and set passport to state  
   useEffect(() => {
     async function getData(): Promise<void> {
@@ -100,17 +89,6 @@ function App() {
     getData();
   }, [address]);
 
-  const alchemy = new Alchemy(settings);
-  
-  // ---- Set the SBTs the address owns
-  useEffect(() => {
-    async function getSbtsForAddress(): Promise<void> {
-      const owner = await alchemy.nft.getNftsForOwner(address!);
-      setUsersTokenList(owner);
-    }
-    getSbtsForAddress();
-  }, [address]);
-
   // ---- Set the stamps to state
   useEffect(() => {
     if (passport) {
@@ -118,6 +96,23 @@ function App() {
       setLoading(false);
     }
   }, [passport]);
+
+  // ---- Set the SBTs the address owns
+  useEffect(() => {
+    async function getSbtsForAddress(): Promise<void> {
+      try {
+        if (!isLoading) {
+          const owner = await alchemy.nft.getNftsForOwner(address!);
+          setUsersTokenList(owner);
+        }
+      } catch (e: unknown) {
+        console.error(e);
+      }
+    }
+    getSbtsForAddress();
+  }, [address]);
+  
+
   
   // ---- Set the providerId list to state
   useEffect(() => {
@@ -162,13 +157,17 @@ function App() {
     }
     setTokenIdHashesList(tokenIdsHashes);
   }, [tokenIds, stampHash]);
-  
-  console.info("Hash token list", tokenIdHashesList)
 
   const { config: mintContractWriteConfig } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "mintBatch",
     args: [tokenIds, stampHash, tokenAmounts],
+  });
+
+  const { config: burnContractWriteConfig } = usePrepareContractWrite({
+    ...contractConfig,
+    functionName: "burnToken",
+    args: [tokenId, stampHash],
   });
 
   const {
@@ -181,6 +180,15 @@ function App() {
   } = useContractWrite(mintContractWriteConfig);
 
   const {
+    data: burnData,
+    write: burnToken,
+    isLoading: isBurnLoading,
+    isSuccess: isBurnStarted,
+    error: burnError,
+    isError: isBurnError
+  } = useContractWrite(burnContractWriteConfig);
+
+  const {
     data: mintTxData,
     isSuccess: mintTxSuccess,
     error: mintTxError,
@@ -189,44 +197,44 @@ function App() {
     hash: mintData?.hash,
   });
 
+  const {
+    data: burnTxData,
+    isSuccess: burnTxSuccess,
+    error: burnTxError,
+    isError: isBurnTxError
+  } = useWaitForTransaction({
+    hash: burnData?.hash,
+  });
+
   const isMinted = mintTxSuccess;
+  const isBurned = burnTxSuccess;
 
   const mintButton = 
-    <Stack align="center">
-      <Button 
-        className="flex justify-center m-auto mt-10 p-4 rounded-xl font-bold"
-        colorScheme="purple"
-        variant="solid"
-        size="lg"
-        disabled={isLoading}
-        onClick={() => mintBatch?.()}
-      >
-        {isMintLoading && "Waiting for approval"}
-        {isMintStarted && "Minting..."}
-        {!isMintStarted && !isMintLoading && "Mint Your Passport SBTs"}
-        {isMintTxError && "ERROR!"}
-      </Button>
-    </Stack>
+    <Button 
+      className="flex justify-center m-auto mt-10 p-4 rounded-xl font-bold"
+      colorScheme="purple"
+      variant="solid"
+      size="lg"
+      disabled={isLoading}
+      onClick={() => mintBatch?.()}
+    >
+      {isMintLoading && "Waiting for approval"}
+      {isMintStarted && "Minting..."}
+      {!isMintStarted && !isMintLoading && "Mint Your Passport SBTs"}
+      {isMintTxError && "ERROR!"}
+    </Button>
 
-  const showPassportStamps = () => {
-    const stampList = stamps?.map((stamp, i) => {
-      return (
-          <ListItem key={i}>
-            {stamp.provider}
-          </ListItem>
-      );
-    });
-    return stampList;
-  }
 
-  console.log("** tokenId", tokenId)
-
-  return (
-    <main className="bg-zinc-900 flex justify-center items-center text-white w-full p-10 max-h-full min-h-screen">
-      <Button onClick={async () => {
+  const verifyStampVcsButton = 
+    <Button
+      className="flex justify-center m-auto mt-10 p-4 rounded-xl font-bold"
+      colorScheme="orange"
+      variant="solid"
+      size="lg"
+      disabled={isLoading}
+      onClick={async () => {
         console.log("generating VC ...");
         const chainId=1;
-        console.log("import.meta.env.MNEMONIC", import.meta.env.VITE_MNEMONIC);
         const signer = ethers.Wallet.fromMnemonic(import.meta.env.VITE_MNEMONIC);
         const domainName = "stamp-vc-verifier-test";
         const passportDocument = {
@@ -241,7 +249,7 @@ function App() {
           "issuanceDate": "2022-10-05T21:57:39.378Z",
           "expirationDate": "2023-01-03T22:57:39.378Z"
         }
-        
+      
         const serializedVC = await getSerializedSignedVC({
           signer,
           chainId,
@@ -260,19 +268,33 @@ function App() {
         // const verifierContract = new ethers.Contract(import.meta.env.VITE_VERIFIER_CONTRACT_ADDRESS, verifierInterface, provider);
         const verifierContract = new ethers.Contract("0x2fCf4f2950ae63a4F1f7034724CC66Bb0842fe8A", verifierInterface, myProvider);
 
-        console.log("vcWithoutProof", vcWithoutProof);
+        // console.log("vcWithoutProof", vcWithoutProof);
 
         const verificationResult = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
-        // const verificationResult = await verifierContract.test();
+
         console.log("Verification result: ", verificationResult);
 
         vcWithoutProof.expirationDate = "Corupted date";
         console.log("vcWithoutProof", vcWithoutProof);
-        const verificationResultBad = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
-        // const verificationResult = await verifierContract.test();
-        console.log("Verification result: ", verificationResultBad);
-      }} />
+        // const verificationResultBad = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
+        // console.log("Verification result: ", verificationResultBad);
+      }} 
+    >Verify Stamp VCs</Button>
+    
 
+  const showPassportStamps = () => {
+    const stampList = stamps?.map((stamp, i) => {
+      return (
+          <ListItem key={i}>
+            {stamp.provider}
+          </ListItem>
+      );
+    });
+    return stampList;
+  }
+
+  return (
+    <main className="bg-zinc-900 flex justify-center items-center text-white w-full p-10 max-h-full min-h-screen">
       <div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl pb-10 font-bold text-center">
         🛂 Passport SBT Minting
@@ -280,9 +302,10 @@ function App() {
         {isConnected
           ? <div>
               <h2 className="text-center text-2xl font-semibold mt-6 mb-6 break-all">Welcome, <span className="text-teal-200">{address}</span>!</h2>
-              <div>
+              <Stack align="center" direction="column">
+                {verifyStampVcsButton}
                 {mintButton}
-              </div>
+              </Stack>
         
             </div>
           : <div>
@@ -357,6 +380,14 @@ function App() {
             <StampSbtList
               usersTokenList={usersTokenList}
               setTokenId={setTokenId}
+              isBurnLoading={isBurnLoading}
+              isBurnStarted={isBurnStarted}
+              burnError={burnError}
+              isBurnError={isBurnError}
+              burnTxSuccess={burnTxSuccess}
+              burnTxError={burnTxError}
+              isBurnTxError={isBurnTxError}
+              burnToken={burnToken}
             />
           </DrawerBody>
           <DrawerFooter>
