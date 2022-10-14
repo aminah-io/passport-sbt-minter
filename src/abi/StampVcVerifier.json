@@ -1,0 +1,336 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "domainName",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "verifier",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "id",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "iamHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "provider",
+        "type": "string"
+      }
+    ],
+    "name": "Verified",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DOMAIN_SEPARATOR",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "_verifier",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "iamHash",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "provider",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct Stamp",
+        "name": "stamp",
+        "type": "tuple"
+      }
+    ],
+    "name": "hashCredentialSubject",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string[]",
+            "name": "_context",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "_type",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string",
+            "name": "issuer",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "issuanceDate",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "expirationDate",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "id",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "iamHash",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "provider",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct Stamp",
+            "name": "credentialSubject",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct StampVc",
+        "name": "stampVc",
+        "type": "tuple"
+      }
+    ],
+    "name": "hashStampVC",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "issuer",
+        "type": "string"
+      }
+    ],
+    "name": "pseudoResolve",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "str",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "substring",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "test",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "verifiedStamps",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string[]",
+            "name": "_context",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "_type",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string",
+            "name": "issuer",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "issuanceDate",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "expirationDate",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "id",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "iamHash",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "provider",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct Stamp",
+            "name": "credentialSubject",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct StampVc",
+        "name": "exampleVC",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint8",
+        "name": "v",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "r",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "s",
+        "type": "bytes32"
+      }
+    ],
+    "name": "verifyStampVc",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

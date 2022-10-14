@@ -5,7 +5,11 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useContractRead,
+  useProvider,
 } from "wagmi";
+import {getSerializedSignedVC} from "./utils/sign";
+import {ethers} from "ethers";
 
 // -- Components
 import { 
@@ -34,6 +38,7 @@ import { TokenIds, TokenId, PROVIDER_ID, Stamp, Passport, TokenIdHashList } from
 // -- Helpers
 import { createHash } from "../utils/helpers";
 import contractInterface from "../contract-abi.json";
+import verifierInterface from "./abi/StampVcVerifier.json";
 
 // -- Constants
 import { TOKEN_TYPES } from "../constants/tokenTypes";
@@ -52,6 +57,17 @@ const contractConfig = {
   contractInterface: contractInterface,
 }
 
+const verifierContractConfig = {
+  addressOrName: `${import.meta.env.VITE_VERIFIER_CONTRACT_ADDRESS}`,
+  contractInterface: verifierInterface,
+}
+
+type Proof = {
+  r: string;
+  s: string;
+  v: number;
+};
+
 function App() {
   const { address, isConnected } = useAccount();
   const [isLoading, setLoading] = useState(false);
@@ -68,7 +84,12 @@ function App() {
   const [showStamps, setShowStamps] = useBoolean();
   const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
   const btnRef: React.MutableRefObject<undefined> = React.useRef();
+  const [proof, setProof] = useState({r:"", s:"", v:0});
+  const [vcWithoutProof, setVcWithoutProof] = useState();
+  const provider = useProvider();
   
+  console.log("provider: ", provider);
+
   // Load the passport from passport reader and set passport to state  
   useEffect(() => {
     async function getData(): Promise<void> {
@@ -202,6 +223,56 @@ function App() {
 
   return (
     <main className="bg-zinc-900 flex justify-center items-center text-white w-full p-10 max-h-full min-h-screen">
+      <Button onClick={async () => {
+        console.log("generating VC ...");
+        const chainId=1;
+        console.log("import.meta.env.MNEMONIC", import.meta.env.VITE_MNEMONIC);
+        const signer = ethers.Wallet.fromMnemonic(import.meta.env.VITE_MNEMONIC);
+        const domainName = "stamp-vc-verifier-test";
+        const passportDocument = {
+          "@context": ["https://www.w3.org/2018/credentials/v1", "https://schema.org", "https://w3id.org/security/v2"],
+          "type": ["VerifiableCredential"],
+          "credentialSubject": {
+            "id": "did:pkh:eip155:1:0x753CFB338925fFEca0ad7f0517362D0CD3085d83",
+            "provider": "TenOrMoreGithubFollowers",
+            "iamHash": "v0.0.0:YHStCYx6ya3vnyOJSiniYDV8DiMe5Q3mP2U9Cjiuzro="
+          },
+          "issuer": "did:key:z6MkuTipUJybMY6H7jm4kFic8pnAhKXM5PcaxEMWSB5WmRmG",
+          "issuanceDate": "2022-10-05T21:57:39.378Z",
+          "expirationDate": "2023-01-03T22:57:39.378Z"
+        }
+        
+        const serializedVC = await getSerializedSignedVC({
+          signer,
+          chainId,
+          domainName,
+          // Using the zero address so it's not tied to a single contract and can be verified
+          // in multiple ones.
+          verifyingContractAddress: ethers.constants.AddressZero,
+          document: passportDocument,
+        });
+
+        const { v, r, s } = serializedVC.proof.proofValue;
+        const { proof, ...vcWithoutProof } = serializedVC;
+
+        const myProvider = new ethers.providers.JsonRpcProvider( "http://localhost:8545" );
+
+        // const verifierContract = new ethers.Contract(import.meta.env.VITE_VERIFIER_CONTRACT_ADDRESS, verifierInterface, provider);
+        const verifierContract = new ethers.Contract("0x2fCf4f2950ae63a4F1f7034724CC66Bb0842fe8A", verifierInterface, myProvider);
+
+        console.log("vcWithoutProof", vcWithoutProof);
+
+        const verificationResult = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
+        // const verificationResult = await verifierContract.test();
+        console.log("Verification result: ", verificationResult);
+
+        vcWithoutProof.expirationDate = "Corupted date";
+        console.log("vcWithoutProof", vcWithoutProof);
+        const verificationResultBad = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
+        // const verificationResult = await verifierContract.test();
+        console.log("Verification result: ", verificationResultBad);
+      }} />
+
       <div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl pb-10 font-bold text-center">
         🛂 Passport SBT Minting

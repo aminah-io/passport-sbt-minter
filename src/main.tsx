@@ -14,6 +14,7 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 import { ChakraProvider } from "@chakra-ui/react";
+import { InjectedConnector } from 'wagmi/connectors/injected';
 
 const { chains, provider } = configureChains(
   [
@@ -24,6 +25,7 @@ const { chains, provider } = configureChains(
     chain.polygon,
     chain.polygonMumbai,
     chain.arbitrum,
+    chain.localhost,
   ],
   [
     jsonRpcProvider({
@@ -115,6 +117,7 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
