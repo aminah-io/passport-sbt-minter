@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Box, Image, Button } from "@chakra-ui/react";
 import { NftContract } from "alchemy-sdk";
+import { TokenId } from "../../types/types";
 
 type StampCardProps = {
   name: string | undefined;
@@ -8,7 +10,7 @@ type StampCardProps = {
   tokenType: string | undefined;
   contractAddress?: string | undefined;
   tokenId: string;
-  setTokenId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setTokenId: React.Dispatch<React.SetStateAction<TokenId | undefined>>;
   isBurnLoading: boolean;
   isBurnStarted: boolean;
   burnError: Error | null;
@@ -17,6 +19,7 @@ type StampCardProps = {
   burnTxError: Error | null;
   isBurnTxError: boolean;
   burnToken: Function | undefined;
+  isBurned: boolean;
 }
 
 export default function StampCard({
@@ -35,34 +38,38 @@ export default function StampCard({
   burnTxError,
   isBurnTxError,
   burnToken,
+  isBurned,
 }: StampCardProps): JSX.Element {
-  // SBT name
-  // Description
-  // Image
-  // Burn button -- needs a modal to ask user if they really want to delete
-
+  const [value, setValue] = useState<string | undefined>();
   return (
     <Box 
       className="border border-solid rounded-lg bg-white mb-4" 
       w="100%" 
       h="124px"
     >
-      <Image src={imageUrl} className="" alt={description} />
+      <img src={imageUrl} className="" alt={description} />
       <Box className="">
         <p className="">{name}</p>
         <p className="">{description}</p>
-        <p>{tokenType}</p>
       </Box>
       <Box className="flex justify-center mt-14">
         <Button
+          className="m-4 break-words"
           colorScheme="red"
           value={tokenId}
+          data-testid="burn-button"
+          // disabled={burnToken}
           onClick={(e) => {
-            setTokenId(parseInt(tokenId));
+            setTokenId(tokenId);
+            // setValue((e.target as HTMLInputElement).value);
             burnToken?.();
+            console.log(burnTxError)
           }}
         >
-          Burn SBT
+          {isBurnLoading && "Waiting for approval"}
+          {isBurnStarted && !isBurned && "Burning..."}
+          {!burnToken && "Burn Functionality is Preparing..."}
+          {!isBurnStarted && !isBurnLoading && burnToken && "Burn SBT"}
         </Button>
       </Box>
     </Box>

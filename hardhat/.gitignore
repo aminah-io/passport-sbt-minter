@@ -16,8 +16,8 @@ dist-ssr
 #hardhat
 typechain-types/
 cache/
-artifacts/
-artifacts/@openzeppelin/*
+artifacts
+artifacts/@openzeppelin/
 
 # Editor directories and files
 .vscode/*

@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Signature, ethers } from "ethers";
+import { Signature, ethers, Wallet } from "ethers";
 
 import { ExampleDocument } from "../types";
 import { primaryType, stampVCTypes } from "../types/passportTypes";
@@ -12,12 +12,13 @@ const getDomain = (name: string, chainId: number, verifyingContract: string) => 
 });
 
 export type GetSerializedVCInputs = {
-  signer: SignerWithAddress;
+  signer: Wallet;
   domainName: string;
   verifyingContractAddress: string;
   chainId: number;
   document: ExampleDocument;
 };
+
 
 export const getSerializedSignedVC = async ({
   signer,
@@ -97,7 +98,7 @@ const normalizeDocument = (fullDocument: FullDocument): NormalizedDocument => {
 };
 
 export type SignDocumentInputs = {
-  signer: SignerWithAddress;
+  signer: Wallet;
   domainName: string;
   verifyingContractAddress: string;
   chainId: number;

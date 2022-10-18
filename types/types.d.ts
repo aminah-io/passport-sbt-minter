@@ -228,16 +228,16 @@ export type PROVIDER_ID =
 
 export type TokenObject = {
   providerId: PROVIDER_ID;
-  tokenId: number;
+  tokenId: number | string;
 };
 
 export type TokenTypes = TokenObject[];
 
-export type TokenId = number;
+export type TokenId = string | number;
 
 export type TokenIds = TokenId[];
 
 export type TokenIdHashList = {
-  tokenId?: number;
+  tokenId?: string | number;
   stampHash?: string;
 }

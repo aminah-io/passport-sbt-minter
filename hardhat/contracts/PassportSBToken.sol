@@ -34,6 +34,8 @@ contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
 
     stampHashes[stampHash] = msg.sender;
 
+    console.log("Stamp hash", stampHashes[stampHash]);
+
     _mint(msg.sender, tokenId, 1, "");
   }
 
