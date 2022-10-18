@@ -185,8 +185,8 @@
       ]
     },
     "/Users/aminahjamil/passport-sbt-minter/hardhat/contracts/PassportSBToken.sol": {
-      "lastModificationDate": 1666086154096,
-      "contentHash": "7281a356b399048cd6fa4ca56c694979",
+      "lastModificationDate": 1666091825494,
+      "contentHash": "87b4677186bcf917935dc0bf178e9419",
       "sourceName": "contracts/PassportSBToken.sol",
       "solcConfig": {
         "version": "0.8.17",

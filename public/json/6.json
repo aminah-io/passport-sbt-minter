@@ -1,7 +1,7 @@
 {
 	"name": "Discord",
 	"description": "I am an owner of a Discord account.",
-	"image": "https://passport-sbt-minter.vercel.app/assets-collection/6.svg",
+	"image": "https://passport-sbt-minter.vercel.app/images/6.svg",
 	"properties": {
 		"mintable": "true"
 	}

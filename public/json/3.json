@@ -1,7 +1,7 @@
 {
 	"name": "Snapshot Proposals Provider",
 	"description": "I have voted on more than 2 Snapshot DAO proposals.",
-	"image": "https://passport-sbt-minter.vercel.app/assets-collection/3.svg",
+	"image": "https://passport-sbt-minter.vercel.app/images/3.svg",
 	"properties": {
 		"mintable": "true"
 	}

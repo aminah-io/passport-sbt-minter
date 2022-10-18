@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
 contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
-  string public constant IMAGE_URI = "https://passport-sbt-minter.vercel.app/assets-collection/";
+  string public constant IMAGE_URI = "https://passport-sbt-minter.vercel.app/images/";
   string public name = "Passport Soulbound Token";
   string public symbol = "PSBT";
 
@@ -21,7 +21,7 @@ contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
   uint256 public constant LINKEDIN = 5;
   uint256 public constant DISCORD = 6;
 
-  constructor() ERC1155("https://passport-sbt-minter.vercel.app/assets-collection/json/{tokenId}.json") {}
+  constructor() ERC1155("https://passport-sbt-minter.vercel.app/json/{tokenId}.json") {}
 
   mapping(string => address) stampHashes;
 
@@ -81,7 +81,7 @@ contract PassportSBToken is ERC1155, ERC1155Burnable, Ownable {
   function uri(uint256 tokenId) override public pure returns (string memory) {
     return string(
       abi.encodePacked(
-        "https://passport-sbt-minter.vercel.app/assets-collection/json/",
+        "https://passport-sbt-minter.vercel.app/json/",
         Strings.toString(tokenId),
         ".json"
       )
