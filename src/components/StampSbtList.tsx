@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 // -- Components
 import StampCard from "./StampCard";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Stack, Box } from "@chakra-ui/react";
 
 // -- Types
 import { TokenId, TokenIdHashList } from "../../types/types";
@@ -47,28 +47,28 @@ export default function StampSbtList({
   const tokenList = usersTokenList?.ownedNfts.map((sbt, i) => {
     if (sbt.contract.address === `${import.meta.env.VITE_PASSPORT_SBT_CONTRACT_ADDRESS}`.toLowerCase()) {
       return (
-        <StampCard
-          key={sbt.tokenId}
-          name={sbt.rawMetadata?.name}
-          description={sbt.rawMetadata?.description}
-          imageUrl={sbt.rawMetadata?.image}
-          tokenType={sbt.contract?.tokenType}
-          contractAddress={sbt.contract?.address}
-          sbtTokenId={sbt.tokenId}
-          setTokenId={setTokenId}
-          tokenAmount={tokenAmount}
-          tokenIdHashesList={tokenIdHashesList}
-          setBurnTxSuccessful={setBurnTxSuccessful}
-        />
+          <StampCard
+            key={sbt.tokenId}
+            name={sbt.rawMetadata?.name}
+            description={sbt.rawMetadata?.description}
+            imageUrl={sbt.rawMetadata?.image}
+            tokenType={sbt.contract?.tokenType}
+            contractAddress={sbt.contract?.address}
+            sbtTokenId={sbt.tokenId}
+            setTokenId={setTokenId}
+            tokenAmount={tokenAmount}
+            tokenIdHashesList={tokenIdHashesList}
+            setBurnTxSuccessful={setBurnTxSuccessful}
+          />
       );
     }
   });
   
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={2}>
-      <GridItem colSpan={1}>
+    <Stack className="grid grid-cols-4 md:grid-cols-3">
+      <Box>
         {tokenList}
-      </GridItem>
-    </Grid>
+      </Box>
+    </Stack>
   );
 }
