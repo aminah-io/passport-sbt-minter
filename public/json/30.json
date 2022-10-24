@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Contributor Statistics: Contributed to At Least One Gitcoin Grants Round",
+	"description": "I have contributed to at least 1 Gitcoin Grants Round.",
+	"image": "https://passport-sbt-minter.vercel.app/images/30.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

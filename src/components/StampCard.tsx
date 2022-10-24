@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import { Box, Image, Button } from "@chakra-ui/react";
 import { NftContract } from "alchemy-sdk";
-import { TokenId } from "../../types/types";
+import { TokenId, TokenIdHashList } from "../../types/types";
+import { contractConfig } from "../App";
 
 type StampCardProps = {
   name: string | undefined;
@@ -9,17 +15,11 @@ type StampCardProps = {
   imageUrl: string | undefined;
   tokenType: string | undefined;
   contractAddress?: string | undefined;
-  tokenId: string;
+  sbtTokenId: string;
   setTokenId: React.Dispatch<React.SetStateAction<TokenId | undefined>>;
-  isBurnLoading: boolean;
-  isBurnStarted: boolean;
-  burnError: Error | null;
-  isBurnError: boolean;
-  burnTxSuccess: boolean;
-  burnTxError: Error | null;
-  isBurnTxError: boolean;
-  burnToken: Function | undefined;
-  isBurned: boolean;
+  tokenAmount: number;
+  tokenIdHashesList: TokenIdHashList[];
+  setBurnTxSuccessful: Function;
 }
 
 export default function StampCard({
@@ -28,19 +28,54 @@ export default function StampCard({
   imageUrl,
   tokenType,
   contractAddress,
-  tokenId,
+  sbtTokenId,
   setTokenId,
-  isBurnLoading,
-  isBurnStarted,
-  burnError,
-  isBurnError,
-  burnTxSuccess,
-  burnTxError,
-  isBurnTxError,
-  burnToken,
-  isBurned,
+  tokenAmount,
+  tokenIdHashesList,
+  setBurnTxSuccessful,
 }: StampCardProps): JSX.Element {
-  const [value, setValue] = useState<string | undefined>();
+  const [tokenIdHash, setTokenIdHash] = useState<TokenIdHashList[]>();
+
+  useEffect(() => {
+    const tokenIdHash = tokenIdHashesList.filter(tokenIdHash => {
+      return tokenIdHash.tokenId?.toString() == sbtTokenId.toString();
+    });
+    setTokenIdHash(tokenIdHash);
+  }, []);
+
+  useEffect(() => {
+    if (isBurned) {
+      setBurnTxSuccessful(isBurned);
+    }
+  });
+
+  const { config: burnContractWriteConfig } = usePrepareContractWrite({
+    ...contractConfig,
+    functionName: "burnToken",
+    args: [sbtTokenId, tokenIdHash?.[0].stampHash, tokenAmount],
+    enabled: Boolean(sbtTokenId),
+  });
+
+  const {
+    data: burnData,
+    write: burnToken,
+    isLoading: isBurnLoading,
+    isSuccess: isBurnStarted,
+    error: burnError,
+    isError: isBurnError
+  } = useContractWrite(burnContractWriteConfig);
+
+   const {
+    data: burnTxData,
+    isSuccess: burnTxSuccess,
+    error: burnTxError,
+    isError: isBurnTxError
+  } = useWaitForTransaction({
+    hash: burnData?.hash,
+  });
+
+  const isBurned = burnTxSuccess;
+
   return (
     <Box 
       className="border border-solid rounded-lg bg-white mb-4" 
@@ -51,25 +86,19 @@ export default function StampCard({
       <Box className="">
         <p className="">{name}</p>
         <p className="">{description}</p>
+        <p>{imageUrl}</p>
       </Box>
       <Box className="flex justify-center mt-14">
         <Button
           className="m-4 break-words"
           colorScheme="red"
-          value={tokenId}
+          value={sbtTokenId}
           data-testid="burn-button"
-          // disabled={burnToken}
-          onClick={(e) => {
-            setTokenId(tokenId);
-            // setValue((e.target as HTMLInputElement).value);
+          onClick={() => {
             burnToken?.();
-            console.log(burnTxError)
           }}
         >
-          {isBurnLoading && "Waiting for approval"}
-          {isBurnStarted && !isBurned && "Burning..."}
-          {!burnToken && "Burn Functionality is Preparing..."}
-          {!isBurnStarted && !isBurnLoading && burnToken && "Burn SBT"}
+          {"Burn SBT"}
         </Button>
       </Box>
     </Box>

@@ -1,6 +1,6 @@
 {
 	"name": "LinkedIn",
-	"description": "I am an owner of a LinkedIn account.",
+	"description": "I am the owner of a LinkedIn account.",
 	"image": "https://passport-sbt-minter.vercel.app/images/5.svg",
 	"properties": {
 		"mintable": "true"

@@ -1,0 +1,8 @@
+{
+	"name": "Lens",
+	"description": "I am the owner of a Lens profile.",
+	"image": "https://passport-sbt-minter.vercel.app/images/57.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Grantee Statistics: Owner of At Least One Grant",
+	"description": "I am the owner of at least 1 Gitcoin Grant.",
+	"image": "https://passport-sbt-minter.vercel.app/images/32.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

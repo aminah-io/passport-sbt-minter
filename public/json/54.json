@@ -1,0 +1,8 @@
+{
+	"name": "Community Staking Gold",
+	"description": "I defended against sybil attacks by staking at least 100 GTC on someone else.",
+	"image": "https://passport-sbt-minter.vercel.app/images/54.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

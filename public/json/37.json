@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Grantee Statistics: Owns Grant with At Least $1,000 in Total Contributions",
+	"description": "A Gitcoin Grant I own has received at least $1,000 in total contributions.",
+	"image": "https://passport-sbt-minter.vercel.app/images/37.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

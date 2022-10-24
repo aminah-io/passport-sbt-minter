@@ -1,6 +1,6 @@
 {
 	"name": "Ens",
-	"description": "I am an owner of an ENS name.",
+	"description": "I am the owner of an ENS name.",
 	"image": "https://passport-sbt-minter.vercel.app/images/1.svg",
 	"properties": {
 		"mintable": "true"

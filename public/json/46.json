@@ -1,0 +1,8 @@
+{
+	"name": "Spent At Least 0.5 ETH in Gas Fees",
+	"description": "I have spent at least 0.5 ETH in gas fees.",
+	"image": "https://passport-sbt-minter.vercel.app/images/46.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

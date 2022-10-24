@@ -1,0 +1,8 @@
+{
+	"name": "More than 500 Twitter Followers",
+	"description": "I have more than 500 followers on Twitter.",
+	"image": "https://passport-sbt-minter.vercel.app/images/10.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

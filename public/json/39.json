@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Grantee Statistics: Owns At Least One Grant in the Eco and Cause Round",
+	"description": "I own at least 1 Gitcoin Grant in the Eco and Cause Round.",
+	"image": "https://passport-sbt-minter.vercel.app/images/39.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

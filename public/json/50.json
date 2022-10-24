@@ -1,0 +1,8 @@
+{
+	"name": "Self Staking Silver",
+	"description": "I defended against sybil attacks by staking at least 10 GTC on myself.",
+	"image": "https://passport-sbt-minter.vercel.app/images/50.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

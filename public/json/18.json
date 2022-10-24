@@ -1,0 +1,8 @@
+{
+	"name": "Ten or More Github Followers",
+	"description": "I have more than 10 followers on Github.",
+	"image": "https://passport-sbt-minter.vercel.app/images/18.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

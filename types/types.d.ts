@@ -228,7 +228,7 @@ export type PROVIDER_ID =
 
 export type TokenObject = {
   providerId: PROVIDER_ID;
-  tokenId: number | string;
+  tokenId: string | number;
 };
 
 export type TokenTypes = TokenObject[];

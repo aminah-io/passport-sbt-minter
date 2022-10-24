@@ -1,0 +1,8 @@
+{
+	"name": "Facebook Friends",
+	"description": "I have more than 100 friends on Facebook",
+	"image": "https://passport-sbt-minter.vercel.app/images/15.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

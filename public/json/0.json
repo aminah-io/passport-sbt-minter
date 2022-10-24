@@ -1,6 +1,6 @@
 {
 	"name": "Twitter",
-	"description": "I am an owner of a Twitter account.",
+	"description": "I am the owner of a Twitter account.",
 	"image": "https://passport-sbt-minter.vercel.app/images/0.svg",
 	"properties": {
 		"mintable": "true"

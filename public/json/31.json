@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Contributor Statistics: Contributed to At Least One Grant in GR14",
+	"description": "I contributed to at least 1 grant in GR14.",
+	"image": "https://passport-sbt-minter.vercel.app/images/31.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

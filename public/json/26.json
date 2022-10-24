@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Contributor Statistics: Contributed to More than 100 Grants",
+	"description": "I have contributed to more than 100 Gitcoin Grants.",
+	"image": "https://passport-sbt-minter.vercel.app/images/26.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

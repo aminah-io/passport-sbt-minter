@@ -1,0 +1,8 @@
+{
+	"name": "Five or More Github Repos",
+	"description": "I have created more than 5 Github repos.",
+	"image": "https://passport-sbt-minter.vercel.app/images/22.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

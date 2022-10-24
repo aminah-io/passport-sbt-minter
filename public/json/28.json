@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Contributor Statistics: Total Contribution Amount At Least $100",
+	"description": "I have contributed at least $100 towards one or more Gitcoin Grants.",
+	"image": "https://passport-sbt-minter.vercel.app/images/28.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

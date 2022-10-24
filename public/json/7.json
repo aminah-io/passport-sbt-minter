@@ -1,0 +1,8 @@
+{
+	"name": "Google",
+	"description": "I am the owner of a Google account.",
+	"image": "https://passport-sbt-minter.vercel.app/images/7.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"name": "Gitcoin Grantee Statistics: Owns Grant with At Least 100 Contributors",
+	"description": "A Gitcoin Grant I own has at least 100 contributors.",
+	"image": "https://passport-sbt-minter.vercel.app/images/35.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

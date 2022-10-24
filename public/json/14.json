@@ -1,0 +1,8 @@
+{
+	"name": "Facebook",
+	"description": "I am the owner of a Facebook account.",
+	"image": "https://passport-sbt-minter.vercel.app/images/14.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

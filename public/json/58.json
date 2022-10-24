@@ -1,0 +1,8 @@
+{
+	"name": "POH",
+	"description": "I am the owner of a Proof of Humanity account.",
+	"image": "https://passport-sbt-minter.vercel.app/images/58.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

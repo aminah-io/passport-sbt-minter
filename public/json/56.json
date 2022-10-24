@@ -1,0 +1,8 @@
+{
+	"name": "ZkSync",
+	"description": "I am the owner of a ZkSync account.",
+	"image": "https://passport-sbt-minter.vercel.app/images/56.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

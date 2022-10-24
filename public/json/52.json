@@ -1,0 +1,8 @@
+{
+	"name": "Community Staking Bronze",
+	"description": "I defended against sybil attacks by staking at least 1 GTC on someone else.",
+	"image": "https://passport-sbt-minter.vercel.app/images/52.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

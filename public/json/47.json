@@ -1,0 +1,8 @@
+{
+	"name": "Possession of At Least 10 GTC",
+	"description": "I possess at least 10 Gitcoin Token (GTC).",
+	"image": "https://passport-sbt-minter.vercel.app/images/47.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"name": "First ETH Txn",
+	"description": "I made my 1st ETH transaction over 30 days ago.",
+	"image": "https://passport-sbt-minter.vercel.app/images/44.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"name": "More than 10 Twitter Tweets",
+	"description": "I have more than 10 tweets on Twitter.",
+	"image": "https://passport-sbt-minter.vercel.app/images/8.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

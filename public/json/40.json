@@ -1,0 +1,8 @@
+{
+	"name": "GitPOAP",
+	"description": "I have a GitPOAP that I've owned for over 15 days.",
+	"image": "https://passport-sbt-minter.vercel.app/images/40.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

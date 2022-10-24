@@ -1,0 +1,8 @@
+{
+	"name": "At Least Ten ETH",
+	"description": "I own at least 10 ETH.",
+	"image": "https://passport-sbt-minter.vercel.app/images/42.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

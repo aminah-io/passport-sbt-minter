@@ -1,0 +1,8 @@
+{
+	"name": "At Least One ETH Txn",
+	"description": "I have sent at least 1 successful ETH transaction.",
+	"image": "https://passport-sbt-minter.vercel.app/images/45.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

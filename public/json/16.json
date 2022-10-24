@@ -1,0 +1,8 @@
+{
+	"name": "Facebook Profile Picture",
+	"description": "My Facebook profile has a picture.",
+	"image": "https://passport-sbt-minter.vercel.app/images/16.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"name": "Starred Github Repo",
+	"description": "I am the owner of a Github repository that has been starred by at least 1 other user.",
+	"image": "https://passport-sbt-minter.vercel.app/images/21.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

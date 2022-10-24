@@ -1,0 +1,8 @@
+{
+	"name": "Self Staking Bronze",
+	"description": "I defended against sybil attacks by staking at least 1 GTC on myself.",
+	"image": "https://passport-sbt-minter.vercel.app/images/49.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

@@ -5,7 +5,7 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-  useProvider,
+  useSigner,
 } from "wagmi";
 import { getSerializedSignedVC } from "./utils/sign";
 import { GetSerializedVCInputs } from "./utils/sign";
@@ -45,17 +45,12 @@ import verifierInterface from "./abi/StampVcVerifier.json";
 // -- Constants
 import { TOKEN_TYPES } from "../constants/tokenTypes";
 
-import { Network, Alchemy, OwnedNftsResponse } from "alchemy-sdk";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-
-const settings = {
-  apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
-  network: Network.ETH_GOERLI,
-};
+import { parse } from "node:path/win32";
 
 const reader = new PassportReader("https://ceramic.passport-iam.gitcoin.co", "1");
 
-const contractConfig = {
+export const contractConfig = {
   addressOrName: `${import.meta.env.VITE_PASSPORT_SBT_CONTRACT_ADDRESS}`,
   contractInterface: contractInterface,
 }
@@ -70,17 +65,21 @@ function App(): JSX.Element {
   const [stampHash, setStampHashes] = useState<string[]>();
   const [burnTokenIdStampHash, setBurnTokenIdStampHash] = useState<TokenIdHashList>();
   const [tokenAmounts, setTokenAmounts] = useState<number[]>();
-  const [usersTokenList, setUsersTokenList] = useState<OwnedNftsResponse>();
   const [tokenIdHashesList, setTokenIdHashesList] = useState<TokenIdHashList[]>([]);
-  const [tokenId, setTokenId] = useState<TokenId>();
+  const [tokenId, setTokenId] = useState<TokenId | string>();
   const [showStamps, setShowStamps] = useBoolean();
   const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
   const btnRef: React.MutableRefObject<undefined> = React.useRef();
-  const [alreadyMinted, setAlreadyMinted] = useState(false);
-  const provider = useProvider();
   const toast = useToast();
-  const alchemy = new Alchemy(settings);
   const tokenAmount = 1;
+  // const provider = new ethers.providers.JsonRpcProvider(import.meta.env.VITE_ALCHEMY_GOERLI_URL);
+
+  // const signer = provider.getSigner(address);
+  // const contract = new ethers.Contract(`${import.meta.env.VITE_PASSPORT_SBT_CONTRACT_ADDRESS}`, contractInterface, signer);
+
+  // const burnToken = (sbtTokenId: TokenId, burnTokenIdStampHash: TokenIdHashList, tokenAmount: number ) => {
+  //   return contract.burnToken(sbtTokenId, burnTokenIdStampHash, tokenAmount);
+  // }
   
   // Load the passport from passport reader and set passport to state  
   useEffect(() => {
@@ -99,17 +98,6 @@ function App(): JSX.Element {
       setLoading(false);
     }
   }, [passport]);
-
-  // ---- Set the SBTs the address owns
-  useEffect(() => {
-    if (address) {
-      async function getSbtsForAddress(): Promise<void> {
-        const owner = await alchemy.nft.getNftsForOwner(address!);
-        setUsersTokenList(owner);
-      }
-      getSbtsForAddress();
-    }
-  }, [address]);
   
   // ---- Set the providerId list to state
   useEffect(() => {
@@ -155,25 +143,11 @@ function App(): JSX.Element {
     setTokenIdHashesList(tokenIdsHashes);
   }, [tokenIds, stampHash]);
 
-  useEffect(() => {
-    if (tokenIdHashesList) {
-      const tokenIdHash = tokenIdHashesList.filter(tokenIdHash => tokenIdHash.tokenId === tokenId);
-      setBurnTokenIdStampHash(tokenIdHash[0]);
-    }
-  }, []);
-
   const { config: mintContractWriteConfig } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "mintBatch",
     args: [tokenIds, stampHash, tokenAmounts],
-    // enabled: false,
-  });
-
-  const { config: burnContractWriteConfig } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "burnToken",
-    args: [(tokenId), burnTokenIdStampHash?.stampHash, tokenAmount],
-    // enabled: Boolean(tokenId),
+    enabled: Boolean(address),
   });
 
   const {
@@ -186,15 +160,6 @@ function App(): JSX.Element {
   } = useContractWrite(mintContractWriteConfig);
 
   const {
-    data: burnData,
-    write: burnToken,
-    isLoading: isBurnLoading,
-    isSuccess: isBurnStarted,
-    error: burnError,
-    isError: isBurnError
-  } = useContractWrite(burnContractWriteConfig);
-
-  const {
     data: mintTxData,
     isSuccess: mintTxSuccess,
     error: mintTxError,
@@ -203,17 +168,7 @@ function App(): JSX.Element {
     hash: mintData?.hash,
   });
 
-  const {
-    data: burnTxData,
-    isSuccess: burnTxSuccess,
-    error: burnTxError,
-    isError: isBurnTxError
-  } = useWaitForTransaction({
-    hash: burnData?.hash,
-  });
-
   const isMinted = mintTxSuccess;
-  const isBurned = burnTxSuccess;
 
   const mintButton = 
     <Button 
@@ -230,66 +185,6 @@ function App(): JSX.Element {
       {isMintStarted && !isMinted && "Minting..."}
       {!isMintStarted && !isMintLoading && "Mint Your Passport SBTs"}
       {isMinted && "Mint More Passport SBTs"}
-      {isMintTxError && "ERROR!"}
-    </Button>
-
-  const verifyStampVcsButton = 
-    <Button
-      className="flex justify-center m-auto mt-10 p-4 rounded-xl font-bold"
-      colorScheme="orange"
-      variant="solid"
-      size="lg"
-      disabled={isLoading}
-      onClick={async () => {
-        console.log("generating VC ...");
-
-        const chainId=1;
-        const signer = ethers.Wallet.fromMnemonic(import.meta.env.VITE_MNEMONIC);
-        const domainName = "stamp-vc-verifier-test";
-        const passportDocument = {
-          "@context": ["https://www.w3.org/2018/credentials/v1", "https://schema.org", "https://w3id.org/security/v2"],
-          "type": ["VerifiableCredential"],
-          "credentialSubject": {
-            "id": "did:pkh:eip155:1:0x753CFB338925fFEca0ad7f0517362D0CD3085d83",
-            "provider": "TenOrMoreGithubFollowers",
-            "iamHash": "v0.0.0:YHStCYx6ya3vnyOJSiniYDV8DiMe5Q3mP2U9Cjiuzro="
-          },
-          "issuer": "did:key:z6MkuTipUJybMY6H7jm4kFic8pnAhKXM5PcaxEMWSB5WmRmG",
-          "issuanceDate": "2022-10-05T21:57:39.378Z",
-          "expirationDate": "2023-01-03T22:57:39.378Z"
-        }
-      
-        const serializedVC = await getSerializedSignedVC({
-          signer,
-          chainId,
-          domainName,
-          // Using the zero address so it's not tied to a single contract and can be verified
-          // in multiple ones.
-          verifyingContractAddress: ethers.constants.AddressZero,
-          document: passportDocument,
-        });
-
-        const { v, r, s } = serializedVC.proof.proofValue;
-        const { proof, ...vcWithoutProof } = serializedVC;
-
-        const myProvider = new ethers.providers.JsonRpcProvider( "http://localhost:8545" );
-
-        // const verifierContract = new ethers.Contract(import.meta.env.VITE_VERIFIER_CONTRACT_ADDRESS, verifierInterface, provider);
-        const verifierContract = new ethers.Contract("0x2fCf4f2950ae63a4F1f7034724CC66Bb0842fe8A", verifierInterface, myProvider);
-
-        // console.log("vcWithoutProof", vcWithoutProof);
-
-        const verificationResult = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
-
-        console.log("Verification result: ", verificationResult);
-
-        vcWithoutProof.expirationDate = "Corupted date";
-        console.log("vcWithoutProof", vcWithoutProof);
-        const verificationResultBad = await verifierContract.verifyStampVc(vcWithoutProof, v, r, s);
-        console.log("Verification result: ", verificationResultBad);
-      }} 
-    >
-      Verify Stamp VCs
     </Button>
 
   const showPassportStamps = () => {
@@ -313,7 +208,6 @@ function App(): JSX.Element {
           ? <div>
               <h2 className="text-center text-2xl font-semibold mt-6 mb-6 break-all">Welcome, <span className="text-teal-200">{address}</span>!</h2>
               <Stack align="center" direction="column">
-                {verifyStampVcsButton}
                 {mintButton}
               </Stack>
         
@@ -388,17 +282,10 @@ function App(): JSX.Element {
           </DrawerHeader>
           <DrawerBody>
             <StampSbtList
-              usersTokenList={usersTokenList}
+              address={address}
               setTokenId={setTokenId}
-              isBurnLoading={isBurnLoading}
-              isBurnStarted={isBurnStarted}
-              burnError={burnError}
-              isBurnError={isBurnError}
-              burnTxSuccess={burnTxSuccess}
-              burnTxError={burnTxError}
-              isBurnTxError={isBurnTxError}
-              burnToken={burnToken}
-              isBurned={isBurned}
+              tokenAmount={tokenAmount}
+              tokenIdHashesList={tokenIdHashesList}
             />
           </DrawerBody>
           <DrawerFooter >

@@ -1,0 +1,8 @@
+{
+	"name": "Bright ID",
+	"description": "I am the owner of a Bright ID account.",
+	"image": "https://passport-sbt-minter.vercel.app/images/17.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}

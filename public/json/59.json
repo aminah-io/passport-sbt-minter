@@ -1,0 +1,8 @@
+{
+	"name": "Gnosis Safe",
+	"description": "I have signed on or owned a Gnosis Safe.",
+	"image": "https://passport-sbt-minter.vercel.app/images/59.svg",
+	"properties": {
+		"mintable": "true"
+	}
+}
