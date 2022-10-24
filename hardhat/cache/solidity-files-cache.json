@@ -190,8 +190,8 @@
       ]
     },
     "/Users/aminahjamil/passport-sbt-minter/hardhat/contracts/PassportSBTokenV1.sol": {
-      "lastModificationDate": 1666611762058,
-      "contentHash": "3d069683bfb91c4af5660d6397d5a557",
+      "lastModificationDate": 1666613671801,
+      "contentHash": "6efcb36a81aefb4b40b81ed9dfdb58ef",
       "sourceName": "contracts/PassportSBTokenV1.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -997,8 +997,8 @@
       ]
     },
     "/Users/aminahjamil/passport-sbt-minter/hardhat/constants/stampConstants.sol": {
-      "lastModificationDate": 1666611928161,
-      "contentHash": "a21231b885bca13dbecc3fefde0feeb9",
+      "lastModificationDate": 1666614406900,
+      "contentHash": "bdd3f28c2e5995802ee3d83eb0bcbf2e",
       "sourceName": "constants/stampConstants.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -1025,12 +1025,8 @@
         }
       },
       "imports": [],
-      "versionPragmas": [
-        "^0.8.17"
-      ],
-      "artifacts": [
-        "Providers"
-      ]
+      "versionPragmas": [],
+      "artifacts": []
     }
   }
 }

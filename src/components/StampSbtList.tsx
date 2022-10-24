@@ -65,8 +65,8 @@ export default function StampSbtList({
   });
   
   return (
-    <Grid templateColumns='repeat(2, 1fr)' gap={4}>
-      <GridItem w="100%">
+    <Grid templateColumns="repeat(3, 1fr)" gap={2}>
+      <GridItem colSpan={1}>
         {tokenList}
       </GridItem>
     </Grid>

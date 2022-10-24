@@ -79,14 +79,12 @@ export default function StampCard({
   return (
     <Box 
       className="border border-solid rounded-lg bg-white mb-4" 
-      w="100%" 
-      h="124px"
+      w="60%"
     >
       <img src={imageUrl} className="" alt={description} />
-      <Box className="">
-        <p className="">{name}</p>
-        <p className="">{description}</p>
-        <p>{imageUrl}</p>
+      <Box className="text-center">
+        <p className="font-miriam text-xl font-bold">{name}</p>
+        <p className="font-miriam">{description}</p>
       </Box>
       <Box className="flex justify-center mt-14">
         <Button

@@ -289,12 +289,12 @@ function App(): JSX.Element {
             />
           </DrawerBody>
           <DrawerFooter >
-            <Button
+            {/* <Button
               className=""
               colorScheme="red"
             >
               Burn All SBTs
-            </Button>
+            </Button> */}
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
