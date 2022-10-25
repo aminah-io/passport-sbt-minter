@@ -7,9 +7,6 @@ import {
   useWaitForTransaction,
   useSigner,
 } from "wagmi";
-import { getSerializedSignedVC } from "./utils/sign";
-import { GetSerializedVCInputs } from "./utils/sign";
-import { ethers } from "ethers";
 
 // -- Components
 import {
@@ -40,13 +37,9 @@ import { TokenIds, TokenId, PROVIDER_ID, Stamp, Passport, TokenIdHashList } from
 // -- Helpers
 import { createHash } from "../utils/helpers";
 import contractInterface from "../contract-abi.json";
-import verifierInterface from "./abi/StampVcVerifier.json";
 
 // -- Constants
 import { TOKEN_TYPES } from "../constants/tokenTypes";
-
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { parse } from "node:path/win32";
 
 const reader = new PassportReader("https://ceramic.passport-iam.gitcoin.co", "1");
 
@@ -72,14 +65,6 @@ function App(): JSX.Element {
   const btnRef: React.MutableRefObject<undefined> = React.useRef();
   const toast = useToast();
   const tokenAmount = 1;
-  // const provider = new ethers.providers.JsonRpcProvider(import.meta.env.VITE_ALCHEMY_GOERLI_URL);
-
-  // const signer = provider.getSigner(address);
-  // const contract = new ethers.Contract(`${import.meta.env.VITE_PASSPORT_SBT_CONTRACT_ADDRESS}`, contractInterface, signer);
-
-  // const burnToken = (sbtTokenId: TokenId, burnTokenIdStampHash: TokenIdHashList, tokenAmount: number ) => {
-  //   return contract.burnToken(sbtTokenId, burnTokenIdStampHash, tokenAmount);
-  // }
   
   // Load the passport from passport reader and set passport to state  
   useEffect(() => {
