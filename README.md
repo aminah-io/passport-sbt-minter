@@ -18,6 +18,11 @@ npm install
 cp .env.example .env
 ```
 
+3. To run the app locally
+
+```sh
+npm run dev
+```
 # Remember to create your .env file before you start!
 
 (The contract address for the Passport SBT Minter has been hard-coded into the .env.example for your use)
