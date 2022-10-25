@@ -65,10 +65,9 @@ export default function StampSbtList({
   });
   
   return (
-    <Stack className="grid grid-cols-4 md:grid-cols-3">
-      <Box>
+      <Box className="grid grid-cols-3">
         {tokenList}
       </Box>
-    </Stack>
+
   );
 }

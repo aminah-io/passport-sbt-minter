@@ -78,7 +78,7 @@ export default function StampCard({
 
   return (
     <Box 
-      className="border border-solid rounded-lg bg-white mb-4" 
+      className="border border-solid rounded-lg bg-white mb-4 p-2" 
       w="60%"
     >
       <img src={imageUrl} className="" alt={description} />
